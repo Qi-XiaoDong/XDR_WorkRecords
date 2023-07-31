@@ -13,18 +13,36 @@
         <el-table-column label="Value" prop="value" show-overflow-tooltip />
         <el-table-column label="操作" width="140">
           <template slot-scope="{ $index }">
-            <el-button type="text" @click="removeProperty($index)">移除</el-button>
+            <el-button type="text" @click="removeProperty($index)"
+              >移除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
 
-      <el-button type="primary" class="inline-large-button" icon="el-icon-plus" @click="openPropertyModel(-1)">
+      <el-button
+        type="primary"
+        class="inline-large-button"
+        icon="el-icon-plus"
+        @click="openPropertyModel(-1)"
+      >
         添加扩展属性
       </el-button>
     </div>
 
-    <el-dialog :visible.sync="modelVisible" title="添加扩展属性" width="640px" append-to-body destroy-on-close>
-      <el-form ref="formRef" :model="newProperty" :rules="rules" aria-modal="true">
+    <el-dialog
+      :visible.sync="modelVisible"
+      title="添加扩展属性"
+      width="640px"
+      append-to-body
+      destroy-on-close
+    >
+      <el-form
+        ref="formRef"
+        :model="newProperty"
+        :rules="rules"
+        aria-modal="true"
+      >
         <el-form-item path="name" label="属性名称( Name )">
           <el-input v-model="newProperty.name" @keydown.enter.prevent />
         </el-form-item>
@@ -44,7 +62,7 @@
 import {
   addExtensionProperty,
   getExtensionProperties,
-  removeExtensionProperty
+  removeExtensionProperty,
 } from "@packages/bo-utils/extensionPropertiesUtil";
 import EventEmitter from "@utils/EventEmitter";
 import { getActive } from "@packages/bpmn-utils/BpmnDesignerUtils";
@@ -56,17 +74,29 @@ export default {
       extensions: [],
       newProperty: { name: "", value: "" },
       rules: {
-        name: { required: true, message: "属性名称不能为空", trigger: ["blur", "change"] },
-        value: { required: true, message: "属性值不能为空", trigger: ["blur", "change"] }
+        name: {
+          required: true,
+          message: "属性名称不能为空",
+          trigger: ["blur", "change"],
+        },
+        value: {
+          required: true,
+          message: "属性值不能为空",
+          trigger: ["blur", "change"],
+        },
       },
-      modelVisible: false
+      modelVisible: false,
     };
   },
   mounted() {
+    console.log(1231313);
     this.reloadExtensionProperties();
     EventEmitter.on("element-update", this.reloadExtensionProperties);
   },
   methods: {
+    /**
+     * 解析xml上的扩展元素
+     */
     async reloadExtensionProperties() {
       this.modelVisible = false;
       await this.$nextTick();
@@ -74,20 +104,30 @@ export default {
       this._extensionsRaw = getExtensionProperties(getActive());
       this.extensions = JSON.parse(JSON.stringify(this._extensionsRaw));
     },
+    /**
+     * 删除扩展
+     * @param {*} propIndex
+     */
     removeProperty(propIndex) {
       removeExtensionProperty(getActive(), this._extensionsRaw[propIndex]);
       this.reloadExtensionProperties();
     },
+    /**
+     * 添加属性
+     */
     async addProperty() {
       await this.$refs.formRef.validate();
       addExtensionProperty(getActive(), this.newProperty);
       await this.reloadExtensionProperties();
     },
+    /**
+     * 打开添加属性弹窗
+     */
     async openPropertyModel() {
       this.modelVisible = true;
       await this.$nextTick();
       this.$refs.formRef.clearValidate();
-    }
-  }
+    },
+  },
 };
 </script>

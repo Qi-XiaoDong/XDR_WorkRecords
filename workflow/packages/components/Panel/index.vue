@@ -85,7 +85,9 @@ export default {
     !this.currentElementId && this.setCurrentElement();
   },
   methods: {
-    //
+    /**
+     * 设置激活的元素
+     */
     setCurrentElement: debounce(function (element) {
       let activatedElement = element,
         activatedElementTypeName = "";
@@ -118,6 +120,7 @@ export default {
       this.bpmnElementName = activatedElementTypeName;
 
       this.setCurrentComponents(activatedElement);
+      // 触发元素更新事件
       EventEmitter.emit("element-update", activatedElement);
 
       Logger.prettyPrimary(
