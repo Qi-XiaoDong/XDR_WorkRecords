@@ -8,10 +8,10 @@
       trigger="hover"
     >
       <div class="button-list_column">
-        <el-button type="primary" @click="openXMLPreviewModel"
+        <el-button type="primary" @click="openPreviewModel('xml')"
           >预览 XML</el-button
         >
-        <el-button type="primary" @click="openJsonPreviewModel"
+        <el-button type="primary" @click="openJsonPreviewModel('Json')"
           >预览 JSON</el-button
         >
       </div>
@@ -46,19 +46,32 @@ export default {
   data() {
     return {
       codeLanguage: "xml",
+      originXml: "",
       codeString: "",
       codeModelVisible: false,
     };
   },
+  // watch:{
+  //   ""() {
+  //     if (!this.originXml) return this.originXml
+  //     if (this.codeLanguage ==="xml") return this.originXml
+  //     if (this.codeLanguage ==="Json"){
+  //       const jsonStr = await this.getModeler.get("moddle").fromXML(xml);
+  //         this.codeString = JSON.stringify(jsonStr, null, 2);
+  //     }
+  //   }
+  // },
   methods: {
     /**
-     * 预览为xml
+     * 打开预览窗口
+     * @param {xml | Json} type 预览的格式
      */
-    async openXMLPreviewModel() {
+    async openPreviewModel(type) {
       try {
-        if (!this.getModeler)
+        if (!this.getModeler) {
           return this.$message.error("流程图引擎初始化失败");
-        this.codeLanguage = "xml";
+        }
+        this.codeLanguage = type;
         this.codeModelVisible = true;
         /**
          * format: true：表示保存的 XML 将以可读性更好的格式进行排版，使其更易于阅读。
@@ -68,28 +81,13 @@ export default {
           format: true,
           preamble: true,
         });
-        this.codeString = xml;
-      } catch (e) {
-        catchError(e);
-      }
-    },
-
-    // 预览json
-    async openJsonPreviewModel() {
-      try {
-        if (!this.getModeler)
-          return this.$message.error("流程图引擎初始化失败");
-        this.codeLanguage = "json";
-        this.codeModelVisible = true;
-        const { xml } = await this.getModeler.saveXML({
-          format: true,
-          preamble: true,
-        });
-        const jsonStr = await this.getModeler.get("moddle").fromXML(xml);
-        this.codeString = JSON.stringify(jsonStr, null, 2);
-      } catch (e) {
-        catchError(e);
-      }
+        if (type === "xml") {
+          this.codeString = xml;
+        } else {
+          const jsonStr = await this.getModeler.get("moddle").fromXML(xml);
+          this.codeString = JSON.stringify(jsonStr, null, 2);
+        }
+      } catch (error) {}
     },
   },
 };

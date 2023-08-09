@@ -233,3 +233,9 @@ const bpmnViewer = new Viewer({
 ### properties-panel(属性栏)
 
 ## context-pad(overlay)
+
+## 事件列表
+
+| 事件名称                 | 效果             | 监听对象 |
+| ------------------------ | ---------------- | -------- |
+| "canvas.viewbox.changed" | 流程图缩放比变化 | modeler  |

@@ -47,6 +47,7 @@ export default {
         const modeler = this.getModeler;
         // 按需要类型创建文件并下载
         if (type === "xml" || type === "bpmn") {
+        // 调用方法得到xml数据
           const { err, xml } = await modeler.saveXML();
           // 读取异常时抛出异常
           if (err) {

@@ -62,9 +62,10 @@ export default {
     }, 100),
   },
   watch: {
+    /**
+     * 深度监听Editor配置改变后重新加载流程图
+     */
     getEditor: {
-      immediate: true,
-      deep: true,
       handler: async function (value, oldValue) {
         try {
           this.reloadProcess(value, oldValue);
@@ -72,6 +73,8 @@ export default {
           catchError(e);
         }
       },
+      immediate: true,
+      deep: true,
     },
   },
 };

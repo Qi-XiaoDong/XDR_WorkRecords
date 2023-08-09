@@ -23,6 +23,7 @@ export default {
           reader.readAsText(file);
           reader.onload = function () {
             const xmlStr = this.result;
+            // 调用导入方法
             getModeler() && getModeler().importXML(xmlStr);
           };
           this.$refs.importRef.value = null;

@@ -58,6 +58,11 @@ export default {
     ...mapGetters(["getModeler"]),
   },
   created() {
+    /**
+     * 监听流程初始化事件 
+     * 尝试得到当前canvas的缩放比
+     * 同时监听canvas缩放比的变化
+     */
     EventEmitter.on("modeler-init", (modeler) => {
       try {
         this._canvas = modeler.get("canvas");
